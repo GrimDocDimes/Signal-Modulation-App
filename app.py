@@ -150,8 +150,8 @@ def channel_controls(channel_num, key_prefix):
 def main():
     st.title("3-Channel Signal Modulation Oscilloscope")
     
-    # Time vector
-    t = np.linspace(0, 1, 1000)
+    # Time vector with extended duration for more cycles (e.g., 10 seconds)
+    t = np.linspace(0, 10, 10000)  # Time duration increased
     
     # Sidebar for global controls
     with st.sidebar:
@@ -192,8 +192,15 @@ def main():
     col1, col2, col3 = st.columns([1, 10, 1])
     
     with col2:
-        fig = plot_signals(t, signals, colors, names, visible)
-        st.plotly_chart(fig, use_container_width=True)
+        # Live updating plot using st.empty()
+        live_plot = st.empty()
+        
+        if 'frozen' not in st.session_state:
+            st.session_state['frozen'] = False
+        
+        while not st.session_state['frozen']:
+            fig = plot_signals(t, signals, colors, names, visible)
+            live_plot.plotly_chart(fig, use_container_width=True)
     
     # Time control buttons
     col1, col2, col3 = st.columns(3)
@@ -211,6 +218,4 @@ def main():
             st.experimental_rerun()
 
 if __name__ == "__main__":
-    if 'frozen' not in st.session_state:
-        st.session_state['frozen'] = False
     main()
