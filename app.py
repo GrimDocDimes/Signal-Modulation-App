@@ -140,8 +140,8 @@ def channel_controls(channel_num, key_prefix):
             frequency = st.slider("Frequency (Hz)", 0.1, 10.0, 1.0, 0.1, key=f"{key_prefix}_freq")
         with col2:
             offset = st.slider("Offset (V)", -2.0, 2.0, 0.0, 0.1, key=f"{key_prefix}_offset")
-            if "Modulated" in signal_type:
-                mod_index = st.slider("Mod Index", 0.0, 5.0, 1.0, 0.1, key=f"{key_prefix}_mod")
+            if "Modulated" in signal_type and "AM" in signal_type:
+                mod_index = st.slider("Modulation Index", 0.0, 5.0, 1.0, 0.1, key=f"{key_prefix}_mod")
             else:
                 mod_index = 1.0
                 
@@ -195,15 +195,7 @@ def main():
         fig = plot_signals(t, signals, colors, names, visible)
         st.plotly_chart(fig, use_container_width=True)
     
-    # Debugging: Output ch3 content
-    st.write("Channel 3 content:", channels[2])  # Debug line to inspect ch3
-    
-    # Check if ch3 has enough elements before accessing index 8
-    if len(channels[2]) > 8 and channels[2][8]:
-        # Logic when ch3[8] exists and is True
-        pass
-    
-    # Control buttons
+    # Time control buttons
     col1, col2, col3 = st.columns(3)
     
     with col1:
